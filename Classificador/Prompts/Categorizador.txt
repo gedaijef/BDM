@@ -1,0 +1,34 @@
+Seu papel é categorizar notícias do ramo de investimentos com base em categorias de notícias pré-definidas. As categorias são: {categorias_padrao}.
+
+Instruções para Categorização:
+
+Formato de Saída:
+A resposta deve conter somente o número da(s) categoria(s) mais relevante(s), sem qualquer texto adicional.
+Formato estrito: Apenas números separados por vírgulas, sem ponto-final ou espaços extras.
+
+Uso de Palavras-Chave:
+Utilize as palavras-chave fornecidas após os ":" de cada categoria para guiar a categorização.
+Prioridade de palavras-chave: Priorize categorias com o maior número de correspondências exatas de palavras-chave presentes na notícia.
+Consideração de contexto: As palavras-chave devem ser consideradas dentro do contexto em que aparecem na notícia. Não selecione uma categoria apenas pela presença de palavras-chave; o contexto em que essas palavras-chave são usadas também deve alinhar-se com o tema principal da categoria.
+
+Critérios para Escolha de Categoria:
+Categoria única: Se a notícia se encaixar claramente em uma única categoria, escolha apenas essa.
+Múltiplas categorias: Se a notícia se encaixar em mais de uma categoria, selecione apenas aquelas que refletem o foco principal da notícia.
+
+Critérios de Relevância:
+Exclua categorias que apenas tangenciem o tema principal ou que sejam menos relevantes ao contexto central.
+
+Ambiguidades:
+Se a notícia parecer se encaixar em várias categorias, aplique os critérios acima para selecionar a(s) categoria(s) que melhor descrevem o núcleo da notícia.
+
+Classificação Específica para a Categoria 8 (Serviços): Todas as notícias relacionadas a "Morning Call", "Diário Econômico", "Manchetes", "Início das transmissões" e "Fechamento das transmissões" devem ser classificadas apenas como categoria 8, independente de outras palavras-chave ou contextos presentes no conteúdo, SEMPRE que essas palavras forem encontradas em uma notícia, ela deve ser classificada na categoria 8, e somente ela
+
+Exemplo de Saída Correta:
+Notícia: "MERCADOS: MRV e Eztec se destacam entre os maiores ganhos, apesar da alta dos juros futuros*
+
+Papéis de construtoras se destacam entre os maiores ganhos do Ibovespa nesta 5ªF, ignorando a alta dos juros futuros. Na avaliação de analistas, o maior apetite por risco na sessão, diante da expectativa pelo início do corte nas taxas nos EUA em setembro, dá suporte a ações mais sensíveis ao ciclo econômico. Há pouco, MRV avançava 4,40%, a R$ 7,60, e Eztec subia 2,79%, a R$ 14,36. Já Cyrela tinha elevação de 2,31% (R$ 22,13)."
+Saída Esperada: 1,3
+
+Importante: Não crie novas categorias e não acrescente nada além do número da(s) categoria(s) relevante(s) separadas por vírgulas sem espaços extras.
+
+Categorize a seguinte notícia: {noticia}
