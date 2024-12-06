@@ -1,0 +1,33 @@
+### Instruções
+        Você deve analisar um conjunto de notícias diárias e produzir um resumo estruturado. Seu objetivo é identificar e agrupar as notícias em temas relevantes, considerando a recorrência, relevância e impacto dos eventos. Certifique-se de evitar repetições e sobreposição entre os tópicos, mas mantenha referências cruzadas quando necessário para mostrar conexões entre temas. O foco principal deve ser oferecer uma visão geral clara, dividida por temas que conectem as notícias de maneira lógica e coesa. Mantenha o resumo conciso e direto ao ponto, com no máximo 5 frases por tema.
+                                                        
+        ### Diretrizes para o Resumo
+        1. Identificação de Temas Centrais
+            Agrupe as notícias com base em temas principais, como eventos significativos, tendências econômicas, inovações tecnológicas, crises setoriais, e resultados corporativos. Ao identificar temas, considere tanto o assunto explícito da notícia quanto o contexto mais amplo de suas implicações. Considere o impacto regional, global ou setorial dos eventos e priorize as implicações econômicas, políticas ou sociais mais significativas.
+                                                        
+        2. Palavras-chave e Contexto
+            Para cada notícia, identifique ao menos 3 palavras-chave importantes (ex.: nomes de empresas, líderes políticos, setores econômicos) e use essas palavras para ajudar a agrupar notícias em temas. Considere o impacto global e as consequências de eventos, como mudanças regulatórias ou avanços tecnológicos.
+                                                        
+        3. Estrutura do Resumo
+            Organize o resumo em seções distintas por tema. Cada seção deve apresentar uma coleção de notícias relacionadas, com um título claro que reflete o tema abordado. Comece cada seção com uma breve introdução (1-2 frases) que contextualize as notícias agrupadas. Mantenha as informações concisas, evitando repetições desnecessárias de conteúdo entre seções, a menos que uma referência cruzada seja necessária para esclarecer conexões entre temas.
+                                                        
+        4. Relevância e Recorrência:
+            Priorize notícias com maior relevância e recorrência. Agrupe notícias que tratem de eventos relacionados, destacando aquelas que ilustram tendências ou crises emergentes. Se uma notícia puder ser classificada em mais de um tema, priorize o agrupamento que tenha maior impacto ou relevância com base no número de notícias similares presentes.
+                                                        
+        5. Exclusão de Informações Externas
+            Use apenas as informações contidas nas notícias. Não adicione opiniões pessoais ou informações externas. Sua tarefa é resumir, não interpretar além do conteúdo fornecido.
+                                                        
+        ### Exemplo de Output Esperado
+        Siga exatamente a formatação abaixo, sem adicionar nada: 
+        Tópico 1: Crescimento e Inovação no Setor de Tecnologia
+        [Resumo de notícias sobre o crescimento do setor de tecnologia, com foco em novas aquisições, lançamentos de produtos inovadores e investimento em IA.]
+        Tópico 2: Resultados Financeiros de Empresas Globais
+        [Resumo de notícias sobre os relatórios trimestrais de grandes empresas, destacando lucros, prejuízos e previsões futuras.]
+        Tópico 3: Crises Regulatórias e Impactos no Mercado
+        [Resumo de notícias sobre problemas regulatórios enfrentados por empresas de setores como energia e finanças, e suas implicações no mercado.]
+        ...
+                                                        
+        Continue agrupando as notícias conforme necessário, com foco em evitar duplicidade e manter uma estrutura clara e coesa em cada tema.
+                                                    
+        Resuma as seguintes notícias:
+        {noticias_filtradas}
