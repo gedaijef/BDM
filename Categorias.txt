@@ -1,0 +1,15 @@
+1- Mercados: Ásia - Europa - NY (S&P 500, Nasdaq, Dow Jones, Wall Street) - Petróleo (Brent/WTI) - Ouro - Outros índices de ações globais (Nikkei, DAX) - Títulos soberanos (US Treasuries, Notes, Bonds, Gilts) - VIX (Índice de volatilidade) - Euro - Libra esterlina - Iene - DXY - Commodities (minério de ferro, cobre) - Ibovespa - Câmbio - Juros - Dólar - Curva de Juros - DI - Risco-país - B3 - Selic
+
+2- Empresas de capital aberto: Noticiário - Balanços - Fatos Relevantes - Recomendações de Ações - Dividendos - IPO (Oferta Pública Inicial) - Aquisições e Fusões - Follow-on - Guidance (Perspectiva de Resultados) - Valuation - Aumento de capital - Buyback (Recompra de ações) - Debêntures - Governança Corporativa - ESG (Ambiental, Social e Governança)
+
+3- Noticiário internacional: Geral (com influência nos mercados) - Dirigentes do Fed, BCE, BoE, BoJ - Geopolítica - Guerras e Conflitos - Risco geopolítico - Política Monetária internacional (Fomc) - Política Econômica Internacional - Tensões Comerciais (EUA-China) - Crise de energia - Pandemias e suas consequências econômicas - Política de juros global - Acordos comerciais - Clima econômico global - OPEP e Produção de Petróleo - Decisões da Organização Mundial do Comércio (OMC)
+
+4- Economia do Brasil: Banco Central - Fazenda - Planejamento - Tesouro - Receita - Superávit/Déficit Fiscal - Reformas econômicas - Política monetária - Dívida pública - Arrecadação - Orçamento - Investimentos públicos - Privatizações - Leilões de Infraestrutura - Metas fiscais - Reserva cambial - Balança comercial - Rating - Upgrade - Agências de classificação de risco (S&P, Moody’s, Fitch)
+
+5- Política do Brasil: Planalto - Congresso - Legislativo - STF - Eleições - Reformas políticas - Lobby - Governabilidade - Impeachment - Medidas Provisórias - Votações importantes - CPI (Comissão Parlamentar de Inquérito) - Crises políticas - Coalizões de governo - Decisões judiciais relevantes - Projeto de lei (PLO)
+
+6- Indicadores econômicos: PIB - Inflação - Índice Nacional de Preços ao Consumidor Amplo (IPCA) - Índice Geral de Preços - Mercado (IGP-M) - IGP-DI - PIB (Produto Interno Bruto) - Produção industrial - Vendas no varejo - Desemprego (Pnad Contínua, Caged) - Varejo - Serviços - IBGE - IBC-Br (atividade econômica) - Desemprego nos EUA (payroll, Jolts, ADP, auxílio-desemprego) - Índice de confiança do consumidor (Conference Board) - Inflação nos EUA e zona do euro (CPI, PPI, PCE) - Exportações e importações - Balança comercial - Investimento estrangeiro direto - Gastos do governo
+
+7- AO VIVO: cobertura online de eventos de interesse dos mercados - Discursos de líderes econômicos - Reuniões de Bancos Centrais - Pronunciamentos de CEOs - Relatórios de inflação - Conferências de resultados trimestrais - Seminários de economia global - Coletivas de imprensa do governo - Reuniões do G20 - Fóruns econômicos mundiais - Eventos corporativos relevantes - Cúpulas de líderes mundiais
+
+8- Serviços: Saber+ (site do Bom Dia Mercado) - Morning Call - Diário Econômico - Manchetes - Fechamento das transmissões
