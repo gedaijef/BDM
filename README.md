@@ -11,10 +11,12 @@ O **Projeto BDM** visa desenvolver dois sistemas principais para automação de 
 - [Classificador](#classificador)
   - [Funcionalidades](#classificador-funcionalidades)
   - [Tecnologias](#classificador-tecnologias)
+  - [Arquitetura](#classificador-arquitetura)
   
 - [Chatbot](#chatbot)
   - [Funcionalidades](#chatbot-funcionalidades)
   - [Tecnologias](#chatbot-tecnologias)
+  - [Arquitetura](#chatbot-arquitetura)
 
 ---
 
@@ -38,6 +40,11 @@ O sistema de classificação foi desenvolvido utilizando as seguintes tecnologia
 - **GreenAPI**: API utilizada para integrar o WhatsApp e enviar mensagens.
 - **OpenAI GPT-4**: Inteligência artificial utilizada para classificar as notícias.
 - **LangChain**: Framework para construir pipelines de IA com processamento de linguagem natural.
+
+### Classificador Arquitetura
+
+![Arquitetura do Classificador](Classificador/Arquitetura.png)
+
 
 ---
 
@@ -63,5 +70,9 @@ O sistema de chatbot foi desenvolvido utilizando as seguintes tecnologias:
 - **OpenAI GPT-4**: Inteligência artificial para processar e gerar respostas.
 - **Gemini**: API utilizada para realizar o sistema de guardrails, garantindo a qualidade das respostas.
 - **LangChain**: Framework para construir pipelines de IA com processamento de linguagem natural.
+
+### Chatbot Arquitetura
+
+![Arquitetura do Chatbot](Chatbot/Arquitetura.png)
 
 ---
