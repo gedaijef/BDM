@@ -2,7 +2,13 @@
 
 ## Introdução
 
-O **Projeto BDM** visa desenvolver dois sistemas principais para automação de processos relacionados ao mercado de ações: um **Classificador de Notícias** e um **Chatbot Interativo**. O **Classificador** tem como objetivo categorizar notícias e enviá-las para os usuários com base em suas preferências. O **Chatbot**, por sua vez, responde a dúvidas dos usuários sobre o mercado de ações e utiliza informações extraídas de notícias armazenadas no banco de dados. A seguir, você encontrará informações detalhadas sobre as funcionalidades e tecnologias utilizadas em cada sistema.
+### Projeto BDM
+
+O **Projeto BDM** visa desenvolver dois sistemas principais para automação de processos relacionados ao BDM Online: um **Classificador de Notícias** e um **Chatbot Interativo**. O **Classificador** tem como objetivo categorizar notícias e enviá-las para os usuários com base em suas preferências. O **Chatbot**, por sua vez, responde a dúvidas dos usuários sobre o mercado de ações e utiliza informações extraídas de notícias armazenadas no banco de dados. A seguir, você encontrará informações detalhadas sobre as funcionalidades e tecnologias utilizadas em cada sistema.
+
+### BDM Online
+
+O **BDM Online** realiza curadoria em tempo real de notícias que impactam o mercado financeiro, acompanhando tendências e comportamentos relevantes. Atualmente, o serviço é disponibilizado por meio de uma comunidade exclusiva no WhatsApp para assinantes. Para saber mais, visite: https://www.bomdiamercado.com.br/
 
 ---
 
