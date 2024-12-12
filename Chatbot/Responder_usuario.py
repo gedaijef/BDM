@@ -3,6 +3,7 @@
 # Importações
 import os
 from langchain_openai import ChatOpenAI
+import google.generativeai as genai
 from langchain.prompts import ChatPromptTemplate
 from langchain_community.callbacks import get_openai_callback
 import requests
@@ -33,6 +34,12 @@ with open("Prompts/Writer_s_memoria.txt", encoding="utf-8") as arquivo:
 with open("Prompts/Judge_s_memoria.txt", encoding="utf-8") as arquivo:
     template_juiz_s_memoria = arquivo.read()
 
+with open("Prompts/teste.txt", encoding="utf-8") as arquivo:
+    template_juiz_guardrail = arquivo.read()
+
+with open("Prompts/Writer_guardrail.txt", encoding="utf-8") as arquivo:
+    template_responder_guardrail = arquivo.read()
+
 # Estruturas da GREEN API
 url_ler = os.getenv('URL_LER')
 url_enviar = os.getenv('URL_ENVIAR')
@@ -44,6 +51,10 @@ llm = ChatOpenAI(
     temperature=0.5,
     api_key=os.getenv('OPENAI_API_KEY')
 )
+
+# Especificações do Gemini
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Função para calcular o preço do Prompt
 def calcular_preco(dados):
@@ -214,6 +225,19 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
         # Transformar a resposta do Juiz em uma lista
         resposta_juiz = ast.literal_eval(resposta_juiz.content)
 
+        # Fazer a verificação com o Gemini
+        prompt_juiz_guardrail = template_juiz_guardrail.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0],memoria=memoria)
+        resposta_juiz_guardrail = model.generate_content(prompt_juiz_guardrail)
+        print(resposta_juiz_guardrail.text)
+        resposta_juiz_guardrail = ast.literal_eval(resposta_juiz_guardrail.text)
+
+        # Alterar as respostas caso seja identificado um erro
+        if resposta_juiz_guardrail[0] ==1:
+            resposta_juiz[0] = resposta_juiz_guardrail[1]
+            resposta_juiz[1] = 10
+            if resposta_juiz[1] == 1:
+                resposta_juiz[2] = resposta_juiz_guardrail[2]
+
         # Enviar a mensagem inicial ao usuário
         payload = {
         "chatId": remetente_numero+'@c.us', 
@@ -228,7 +252,7 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
         print(f'Ocorreu um erro durante o Agente Juiz: {e}')
         payload = {
         "chatId": remetente_numero+'@c.us', 
-        "message": "Um erro ocorreu! Tente utilizar esse serviço mais tarde."
+        "message": "🤖- Um erro ocorreu! Tente utilizar esse serviço mais tarde."
         }
         headers = {'Content-Type': 'application/json'}
         response = requests.request("POST", url_enviar, data=json.dumps(payload), headers=headers)
@@ -311,10 +335,46 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                     print(f"\033[31mCusto para o prompt resposta: {custo_escritor}\033[0m")
                     print(f"\033[32mCusto total: {informacoes_custos}\033[0m")
 
-                    print(resposta_escritor)
-
                     # Transformar a resposta do Juiz em uma lista
                     resposta_escritor = ast.literal_eval(resposta_escritor.content)
+
+                    resposta_escritor[0] = resposta_escritor[0].replace('**','*')
+
+
+                    print(resposta_escritor)
+
+                    # Fazer a verificação com o Gemini
+                    prompt_escritor_guardrail = template_responder_guardrail.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0],memoria=memoria, resposta_writer = resposta_escritor[0],noticias=noticias_formatadas)
+                    resposta_escritor_guardrail = model.generate_content(prompt_escritor_guardrail)
+                    print(resposta_escritor_guardrail.text)
+                    resposta_escritor_guardrail = ast.literal_eval(resposta_escritor_guardrail.text)
+
+                    # Alterar as respostas caso seja identificado um erro
+                    if resposta_escritor_guardrail[0] ==1:
+                        prompt_escritor += f"""## Considerações Finais
+                        Anteriormente, você respondeu esta pergunta, porém foi identificado um erro na resposta gerada. Seguem as observações que você deve considerar para responder de forma correta desta vez
+                        
+                        Observação: {resposta_escritor_guardrail[1]}"""
+
+                        # Obter as informações do Prompt Escritor de Resposta
+                        with get_openai_callback() as dados:
+                            resposta_escritor = llm.invoke(prompt_escritor)
+                            dados = str(dados)
+
+                        # Obter o preço gasto pelo Prompt do Escritor de Resposta e adicionar ao informacoes_custos
+                        custo_escritor = calcular_preco(dados)
+                        for i in range(len(informacoes_custos)):
+                            informacoes_custos[i] = custo_escritor[i]
+
+                        print(f"\033[31mCusto para o prompt resposta: {custo_escritor}\033[0m")
+                        print(f"\033[32mCusto total: {informacoes_custos}\033[0m")
+
+                        # Transformar a resposta do Juiz em uma lista
+                        resposta_escritor = ast.literal_eval(resposta_escritor.content)
+
+                        resposta_escritor[0] = resposta_escritor[0].replace('**','*')
+
+                        print("Nova resposta gerada: "+resposta_escritor[0])
 
                     # Inserir na tabela client_message
                     call_insert_new_client_message_cost(pergunta=remetente_mensagem, categoria_juiz=resposta_juiz[1], resposta_juiz=resposta_juiz[0], categoria_escritor=resposta_escritor[1], resposta_escritor=resposta_escritor[0], resposta_sql=resposta_sql.content, preco=informacoes_custos[0], cliente_numero=remetente_numero,input_tokens=informacoes_custos[1],output_tokens=informacoes_custos[2])
@@ -348,10 +408,10 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                             "message": f"*Mensagem não respondida*\n\nCliente: {remetente_numero}\n\nMensagem: {remetente_mensagem}"
                         }
 
-                    # Enviar aos escritores
+                    # Enviar aos jornalistas
                     headers = {'Content-Type': 'application/json'}
                     response = requests.request("POST", url_enviar, data=json.dumps(payload), headers=headers)
-                    print("     Enviou para o Grupo dos Escritores: ", response.text.encode('utf8'))
+                    print("     Enviou para o Grupo dos Jornalistas: ", response.text.encode('utf8'))
 
             # Enviar uma mensagem de erro ao usuário, caso ocorra
             except Exception as e:
@@ -359,7 +419,7 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                 print(f'Ocorreu um erro durante o envio da mensagem: {e}') 
                 payload = {
                 "chatId": remetente_numero+'@c.us', 
-                "message": "Um erro ocorreu! Tente utilizar esse serviço mais tarde."
+                "message": "🤖- Um erro ocorreu! Tente utilizar esse serviço mais tarde."
                 }
                 headers = {'Content-Type': 'application/json'}
                 response = requests.request("POST", url_enviar, data=json.dumps(payload), headers=headers)
@@ -367,7 +427,7 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
 
         # Se a classificação do Agente Juiz for diferente de Relevante (0) e de Memória (6)
         else:
-            # Enviar aos escritores caso a mensagem esteja indicando um erro
+            # Enviar aos jornalistas caso a mensagem esteja indicando um erro
             if resposta_juiz[1] == 8:
                 payload = {
                     "chatId": "120363360919838255@g.us", 
@@ -376,7 +436,7 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
 
                 headers = {'Content-Type': 'application/json'}
                 response = requests.request("POST", url_enviar, data=json.dumps(payload), headers=headers)
-                print("     Enviou para o Grupo dos Escritores: ", response.text.encode('utf8'))
+                print("     Enviou para o Grupo dos Jornalistas: ", response.text.encode('utf8'))
 
             # Inserir na tabela client_message com os parâmetros não utilizados como None
             call_insert_new_client_message_cost(pergunta=remetente_mensagem, categoria_juiz=resposta_juiz[1], resposta_juiz=resposta_juiz[0], categoria_escritor=None, resposta_escritor=None, resposta_sql=None, preco=informacoes_custos[0], cliente_numero=remetente_numero,input_tokens=informacoes_custos[1],output_tokens=informacoes_custos[2])
@@ -428,7 +488,7 @@ while True:
                 remetente_categorias = select_client(remetente_numero)
 
                 # Mandar mensagem padrão para o usuário, caso não estiver cadastrado no Banco de Dados
-                if not remetente_categorias:
+                if not remetente_categorias or remetente_numero!="5511971688816":
                     print("\n\n-----------------------------------")
                     print("     Usuário fora do banco.")
                     resposta = """O chatbot da BDM é um serviço exclusivo para assinantes. Para acessar nossas funcionalidades e continuar a interação, você pode realizar a assinatura através deste link: https://www.bomdiamercado.com.br/finalizar-compra/
@@ -440,7 +500,7 @@ while True:
                 elif 'textMessage' not in messages[i] and messages[i]['typeMessage'] != "stickerMessage" and 'extendedTextMessage' not in messages[i] and messages[i]['typeMessage'] != "reactionMessage" :
                     print("\n\n-----------------------------------")
                     print("     Outra mídia além de texto.")
-                    resposta = """Nosso sistema atualmente só aceita perguntas em formato de texto. Infelizmente, não conseguimos processar outros tipos de mídia, como vídeos, áudios ou imagens."""
+                    resposta = """🤖- Nosso sistema atualmente só aceita perguntas em formato de texto. Infelizmente, não conseguimos processar outros tipos de mídia, como vídeos, áudios ou imagens."""
                     threading.Thread(target=responder_outras, args=(remetente_numero,resposta)).start()
 
                 # Responder ao usuário
@@ -451,7 +511,7 @@ while True:
                     # Verificar o tamanho da mensagem
                     if ('textMessage' in messages[i] and len(messages[i]['textMessage']) > 500) or ('extendedTextMessage' in messages[i] and len(messages[i]['extendedTextMessage']['text']) > 500):
                         print('Mensagem muito grande')
-                        resposta = """Infelizmente, sua mensagem excede o limite permitido de 500 caracteres. Caso você a ajuste para esse tamanho, ficarei muito feliz em ajudá-lo!"""
+                        resposta = """🤖- Infelizmente, sua mensagem excede o limite permitido de 500 caracteres. Caso você a ajuste para esse tamanho, ficarei muito feliz em ajudá-lo!"""
                         threading.Thread(target=responder_outras, args=(remetente_numero,resposta)).start()
 
                     else:
