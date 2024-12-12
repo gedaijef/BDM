@@ -139,31 +139,58 @@ CREATE OR REPLACE FUNCTION count_group_message_by_date_category(
     end_date DATE,
     category_input VARCHAR(25)
 )
-RETURNS TABLE(quantity BIGINT, distributed BIGINT) AS $$
+RETURNS TABLE(quantity BIGINT, distributed BIGINT, clients BIGINT) AS $$
 DECLARE
     query TEXT;
 BEGIN
     -- Construir a consulta dinamicamente
-    query := 'SELECT count(*) AS quantity, sum(distributed) AS distributed FROM group_message
+    query := 'SELECT 
+                count(*) AS quantity, 
+                sum(distributed) AS distributed,
+                (SELECT COUNT(DISTINCT client.id) AS clients
+                 FROM group_message
+                 JOIN default_category_group_message dm ON dm.group_message_id = group_message.id
+                 JOIN default_category_client dc ON dc.default_category_id = dm.default_category_id
+                 JOIN client ON client.id = dc.client_id
+                 WHERE group_message.date IS NOT NULL 
+                   AND group_message.time IS NOT NULL
+                   AND client.datetime <= concat(group_message.date, '' '', group_message.time)::timestamp';
+
+    -- Adiciona condições dinâmicas na subquery
+    IF category_input IS NOT NULL THEN
+        query := query || ' AND dm.default_category_id = ANY(string_to_array($1, '','')::INT[])';
+    END IF;
+
+    IF end_date IS NOT NULL THEN
+        query := query || ' AND group_message.date <= $2';
+    END IF;
+
+    IF start_date IS NOT NULL THEN
+        query := query || ' AND group_message.date >= $3';
+    END IF;
+
+    -- Fecha a subquery e o restante da consulta principal
+    query := query || ') AS recipients
+              FROM group_message
               WHERE id IN 
               (SELECT DISTINCT group_message.id FROM group_message
                FULL JOIN default_category_group_message ON group_message.id = default_category_group_message.group_message_id 
                WHERE TRUE';
 
-    -- Adiciona condição para 'category_input' se não for NULL
+    -- Adiciona condições dinâmicas na query principal
     IF category_input IS NOT NULL THEN
         query := query || ' AND default_category_group_message.default_category_id = ANY(string_to_array($1, '','')::INT[])';
     END IF;
-    
+
     IF end_date IS NOT NULL THEN
         query := query || ' AND group_message.date <= $2';
     END IF;
-    
+
     IF start_date IS NOT NULL THEN
         query := query || ' AND group_message.date >= $3';
     END IF;
 
-    -- Fecha a subquery
+    -- Fecha a subquery da query principal
     query := query || ')';
 
     -- Executa a consulta dinâmica com os parâmetros
@@ -332,6 +359,38 @@ BEGIN
         RAISE NOTICE 'Cliente com CPF % não encontrado.', cpf_input;
     END IF;
 END; $$;
+-------------------------------------------------------
+CREATE OR REPLACE PROCEDURE insert_group_category_cost(
+    category INTEGER[],
+    cost numeric, 
+    input_token int, 
+    output_token int
+)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    idMessage INT;
+BEGIN
+    -- Seleciona o código da mensagem mais recente, data e hora
+    SELECT id into idMessage
+    FROM group_message
+	where date is not null and time is not null
+    ORDER BY date DESC, time DESC 
+    LIMIT 1;
+   
+    -- Inserir as categorias relacionadas
+    INSERT INTO default_category_group_message (group_message_id, default_category_id)
+    SELECT idMessage, unnest(category);
+    
+    -- Inserir os custos na tabela financeiro
+    INSERT INTO group_message_cost(total_cost, input_tokens, output_tokens, group_message_id)
+    VALUES (cost, input_token, output_token, idMessage);
+    
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Falha no insert cost ou no insert default_category: %', SQLERRM;
+END;
+$$;
 ---------------------------------------------
 create or replace view group_message_today as
  SELECT gm.date,
