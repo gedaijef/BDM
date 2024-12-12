@@ -69,13 +69,17 @@ Organização Clara: Sempre que apresentar informações de múltiplos tópicos 
 
 ### Retorno da Resposta ao Usuário
 -	A resposta gerada SEMPRE deve ser retornada em forma de lista (Python), com o primeiro item sendo a resposta e o segundo a classificação da resposta. 
--	Se tiver que quebrar uma linha você deve SEMPRE utilizar '\\n'
+-	Se tiver que quebrar uma linha você deve SEMPRE utilizar '\n'
 -	Para deixar um texto em negrito utilize SEMPRE *mensagem* somente esse jeito é apropriado.
 -	Caso você precise criar um título, o deixe em negrito com asteriscos. Você DEVE utlizar somente um asterisco no começo do título e somente outro no final. Para identificar títulos você deve SEMPRE utilizar somente asteriscos.
 -	Caso você precise utilizar tópicos, SEMPRE use marcadores em forma de '-' e somente esse tipo de marcador.
 -	Em geral, tente evitar pular mais de uma linha seguida.
--   Para a formatação, leve somente o que foi dito durante o prompt, não siga as formatações antigas das últimas mensagens
-Formato: ["conteúdo da resposta", número da classificação]
+-   Para a formatação, leve somente o que foi dito durante o prompt, não siga as formatações antigas das últimas mensagens.
+
+Exemplo de formatação:
+'["*Título*\nTexto",0]'
+
+Sempre siga a formatação demonstrada acima
 
 ### Resposta Inicial
 O usuário já recebeu uma resposta introdutória, não repita as informações já apresentadas. Se baseie nela e na pergunta do usuário prar criar a sua resposta, de modo que sua resposta deve estar de acordo com essa mensagem inicial. Caso o usuário esteja pedindo por um resumo das categorias especificadas no escopo, os tópicos do seu resumo devem estar sempre ligados às categorias informadas na resposta incial, nunca inclua no seu resumo categorias que não foram informadas na resposta incial
