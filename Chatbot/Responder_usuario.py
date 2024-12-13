@@ -34,7 +34,7 @@ with open("Prompts/Writer_s_memoria.txt", encoding="utf-8") as arquivo:
 with open("Prompts/Judge_s_memoria.txt", encoding="utf-8") as arquivo:
     template_juiz_s_memoria = arquivo.read()
 
-with open("Prompts/teste.txt", encoding="utf-8") as arquivo:
+with open("Prompts/Judge_guardrail.txt", encoding="utf-8") as arquivo:
     template_juiz_guardrail = arquivo.read()
 
 with open("Prompts/Writer_guardrail.txt", encoding="utf-8") as arquivo:
@@ -488,7 +488,7 @@ while True:
                 remetente_categorias = select_client(remetente_numero)
 
                 # Mandar mensagem padrão para o usuário, caso não estiver cadastrado no Banco de Dados
-                if not remetente_categorias or remetente_numero!="5511971688816":
+                if not remetente_categorias:
                     print("\n\n-----------------------------------")
                     print("     Usuário fora do banco.")
                     resposta = """O chatbot da BDM é um serviço exclusivo para assinantes. Para acessar nossas funcionalidades e continuar a interação, você pode realizar a assinatura através deste link: https://www.bomdiamercado.com.br/finalizar-compra/
