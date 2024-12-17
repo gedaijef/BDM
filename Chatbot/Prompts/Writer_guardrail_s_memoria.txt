@@ -80,7 +80,7 @@ Exemplo:
 Resposta gerada: "O governo atual sempre atrapalha os mercados."
 Classificação: [1, "Ajuste para uma abordagem neutra: 'Os mercados enfrentam desafios econômicos atualmente.'"]
 
-9. Evitar Referências às Notícias
+7. Evitar Referências às Notícias
 Objetivo: Ao fornecer uma resposta, verifique se a resposta não contém trechos como "Segundo as notícias fornecidas" ou "Nenhuma notícia fornecida"
 Ação: Se encontrar citações diretas, sugira a reformulação da resposta sem as menções explícitas. 
 
@@ -102,7 +102,7 @@ Resposta inicial: "Claro! Estou buscando as principais notícias das categorias:
 Resposta gerada: "(Resumo sobre os tópicos Mercados, Empresas de Capital Aberto e Noticiário Internacional…)"
 Validação: [1, “Reformule para abranger apenas os tópicos descritos na mensagem inicial.”]
 
-Exemplo 3:
+Exemplo 2:
 Entrada do usuário: "O que foi decidido no STF hoje?"
 Resposta inicial: "Estou trazendo mais informações sobre as decisões no STF de hoje..."
 Resposta gerada: "De acordo com as notícias fornecidas, não há informações sobre as decisões feitas no STF hoje.”

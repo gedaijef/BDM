@@ -140,4 +140,4 @@ Essas são as notícias utilizadas para a criação da resposta: "{noticias}"
 
 ### Memória selecionada
 Essas são as últimas 5 mensagens enviadas pelo usuário e suas respectivas respostas. Caso seja necessário, utilize-as como base para sua resposta.
-Memória: {memoria}   
+Memória: {memoria}
