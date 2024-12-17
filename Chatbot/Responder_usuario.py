@@ -37,8 +37,14 @@ with open("Prompts/Judge_s_memoria.txt", encoding="utf-8") as arquivo:
 with open("Prompts/Judge_guardrail.txt", encoding="utf-8") as arquivo:
     template_juiz_guardrail = arquivo.read()
 
+with open("Prompts/Judge_guardrail_s_memoria.txt", encoding="utf-8") as arquivo:
+    template_juiz_guardrail_s_memoria = arquivo.read()
+
 with open("Prompts/Writer_guardrail.txt", encoding="utf-8") as arquivo:
     template_responder_guardrail = arquivo.read()
+
+with open("Prompts/Writer_guardrail_s_memoria.txt", encoding="utf-8") as arquivo:
+    template_responder_guardrail_s_memoria = arquivo.read()
 
 # Estruturas da GREEN API
 url_ler = os.getenv('URL_LER')
@@ -225,18 +231,44 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
         # Transformar a resposta do Juiz em uma lista
         resposta_juiz = ast.literal_eval(resposta_juiz.content)
 
-        # Fazer a verificação com o Gemini
-        prompt_juiz_guardrail = template_juiz_guardrail.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0],memoria=memoria)
-        resposta_juiz_guardrail = model.generate_content(prompt_juiz_guardrail)
-        print(resposta_juiz_guardrail.text)
-        resposta_juiz_guardrail = ast.literal_eval(resposta_juiz_guardrail.text)
+        # Fazer a verificação com o Gemini com memória
+        if historico_respostas != None:
+            prompt_juiz_guardrail = template_juiz_guardrail.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0],memoria=memoria)
+            resposta_juiz_guardrail = model.generate_content(prompt_juiz_guardrail)
+            print(resposta_juiz_guardrail.text)
+            resposta_juiz_guardrail = ast.literal_eval(resposta_juiz_guardrail.text)
+        else:
+            prompt_juiz_guardrail = template_juiz_guardrail_s_memoria.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0])
+            resposta_juiz_guardrail = model.generate_content(prompt_juiz_guardrail)
+            print(resposta_juiz_guardrail.text)
+            resposta_juiz_guardrail = ast.literal_eval(resposta_juiz_guardrail.text)
 
         # Alterar as respostas caso seja identificado um erro
         if resposta_juiz_guardrail[0] ==1:
-            resposta_juiz[0] = resposta_juiz_guardrail[1]
-            resposta_juiz[1] = 10
-            if resposta_juiz[1] == 1:
-                resposta_juiz[2] = resposta_juiz_guardrail[2]
+            print('entrou')
+            prompt_juiz += f"""## Considerações Finais
+            Anteriormente, você respondeu esta pergunta, porém foi identificado um erro na resposta gerada. Seguem as observações que você deve considerar para responder de forma correta desta vez
+            
+            Observação: {resposta_juiz_guardrail[1]}"""
+
+            # Obter as informações do Prompt do Juiz
+            with get_openai_callback() as dados:
+                resposta_juiz = llm.invoke(prompt_juiz)
+                dados = str(dados)
+
+            # Obter o preço gasto pelo Prompt e adicionar ao informacoes_custos
+            custo_juiz = calcular_preco(dados)
+            for i in range(len(informacoes_custos)):
+                informacoes_custos[i] += custo_juiz[i]
+
+            # Exibir a resposta do Prompt e seu custo
+            print("\033[1mResposta Juiz\033[0m\n" + resposta_juiz.content)
+            print(f"\033[31mCusto para o Prompt Juiz: {custo_juiz}\033[0m\n")
+
+            # Transformar a resposta do Juiz em uma lista
+            resposta_juiz = ast.literal_eval(resposta_juiz.content)
+
+            print(resposta_juiz)
 
         # Enviar a mensagem inicial ao usuário
         payload = {
@@ -343,11 +375,45 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
 
                     print(resposta_escritor)
 
-                    # Fazer a verificação com o Gemini
-                    prompt_escritor_guardrail = template_responder_guardrail.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0],memoria=memoria, resposta_writer = resposta_escritor[0],noticias=noticias_formatadas)
-                    resposta_escritor_guardrail = model.generate_content(prompt_escritor_guardrail)
-                    print(resposta_escritor_guardrail.text)
-                    resposta_escritor_guardrail = ast.literal_eval(resposta_escritor_guardrail.text)
+                     # Fazer a verificação com o Gemini com memória
+                    if historico_respostas != None:
+                        prompt_escritor_guardrail = template_responder_guardrail.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0],memoria=memoria, resposta_writer = resposta_escritor[0],noticias=noticias_formatadas)
+                        resposta_escritor_guardrail = model.generate_content(prompt_escritor_guardrail)
+                        print(resposta_escritor_guardrail.text)
+                        resposta_escritor_guardrail = ast.literal_eval(resposta_escritor_guardrail.text)
+
+                    else:
+                        prompt_escritor_guardrail = template_responder_guardrail_s_memoria.format(mensagem=remetente_mensagem,resposta_judge=resposta_juiz[0], resposta_writer = resposta_escritor[0],noticias=noticias_formatadas)
+                        resposta_escritor_guardrail = model.generate_content(prompt_escritor_guardrail)
+                        print(resposta_escritor_guardrail.text)
+                        resposta_escritor_guardrail = ast.literal_eval(resposta_escritor_guardrail.text)
+
+                    # Alterar as respostas caso seja identificado um erro
+                    if resposta_escritor_guardrail[0] ==1:
+                        prompt_escritor += f"""## Considerações Finais
+                        Anteriormente, você respondeu esta pergunta, porém foi identificado um erro na resposta gerada. Seguem as observações que você deve considerar para responder de forma correta desta vez
+                        
+                        Observação: {resposta_escritor_guardrail[1]}"""
+
+                        # Obter as informações do Prompt Escritor de Resposta
+                        with get_openai_callback() as dados:
+                            resposta_escritor = llm.invoke(prompt_escritor)
+                            dados = str(dados)
+
+                        # Obter o preço gasto pelo Prompt do Escritor de Resposta e adicionar ao informacoes_custos
+                        custo_escritor = calcular_preco(dados)
+                        for i in range(len(informacoes_custos)):
+                            informacoes_custos[i] = custo_escritor[i]
+
+                        print(f"\033[31mCusto para o prompt resposta: {custo_escritor}\033[0m")
+                        print(f"\033[32mCusto total: {informacoes_custos}\033[0m")
+
+                        # Transformar a resposta do Juiz em uma lista
+                        resposta_escritor = ast.literal_eval(resposta_escritor.content)
+
+                        resposta_escritor[0] = resposta_escritor[0].replace('**','*')
+
+                        print("Nova resposta gerada: "+resposta_escritor[0])
 
                     # Alterar as respostas caso seja identificado um erro
                     if resposta_escritor_guardrail[0] ==1:
@@ -410,7 +476,7 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
 
                     # Enviar aos jornalistas
                     headers = {'Content-Type': 'application/json'}
-                    response = requests.request("POST", url_enviar, data=json.dumps(payload), headers=headers)
+                    # response = requests.request("POST", url_enviar, data=json.dumps(payload), headers=headers)
                     print("     Enviou para o Grupo dos Jornalistas: ", response.text.encode('utf8'))
 
             # Enviar uma mensagem de erro ao usuário, caso ocorra
