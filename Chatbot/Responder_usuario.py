@@ -360,7 +360,7 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                     # Obter o preço gasto pelo Prompt do Escritor de Resposta e adicionar ao informacoes_custos
                     custo_escritor = calcular_preco(dados)
                     for i in range(len(informacoes_custos)):
-                        informacoes_custos[i] = custo_escritor[i]
+                        informacoes_custos[i] += custo_escritor[i]
                     
                     print("Resposta Escritor:", resposta_escritor.content)
 
@@ -403,34 +403,7 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                         # Obter o preço gasto pelo Prompt do Escritor de Resposta e adicionar ao informacoes_custos
                         custo_escritor = calcular_preco(dados)
                         for i in range(len(informacoes_custos)):
-                            informacoes_custos[i] = custo_escritor[i]
-
-                        print(f"\033[31mCusto para o prompt resposta: {custo_escritor}\033[0m")
-                        print(f"\033[32mCusto total: {informacoes_custos}\033[0m")
-
-                        # Transformar a resposta do Juiz em uma lista
-                        resposta_escritor = ast.literal_eval(resposta_escritor.content)
-
-                        resposta_escritor[0] = resposta_escritor[0].replace('**','*')
-
-                        print("Nova resposta gerada: "+resposta_escritor[0])
-
-                    # Alterar as respostas caso seja identificado um erro
-                    if resposta_escritor_guardrail[0] ==1:
-                        prompt_escritor += f"""## Considerações Finais
-                        Anteriormente, você respondeu esta pergunta, porém foi identificado um erro na resposta gerada. Seguem as observações que você deve considerar para responder de forma correta desta vez
-                        
-                        Observação: {resposta_escritor_guardrail[1]}"""
-
-                        # Obter as informações do Prompt Escritor de Resposta
-                        with get_openai_callback() as dados:
-                            resposta_escritor = llm.invoke(prompt_escritor)
-                            dados = str(dados)
-
-                        # Obter o preço gasto pelo Prompt do Escritor de Resposta e adicionar ao informacoes_custos
-                        custo_escritor = calcular_preco(dados)
-                        for i in range(len(informacoes_custos)):
-                            informacoes_custos[i] = custo_escritor[i]
+                            informacoes_custos[i] += custo_escritor[i]
 
                         print(f"\033[31mCusto para o prompt resposta: {custo_escritor}\033[0m")
                         print(f"\033[32mCusto total: {informacoes_custos}\033[0m")
