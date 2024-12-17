@@ -269,8 +269,8 @@ DECLARE
     idClient int;
 BEGIN
     -- Inserir o cliente e recuperar o código gerado
-    INSERT INTO client (phone_number, name, cpf, email, company, position, birth_date)
-    VALUES (phone_number_input, name_input, cpf_input, email_input, company_input, position_input, birth_date_input)
+    INSERT INTO client (phone_number, name, cpf, email, company, position, birth_date,datetime)
+    VALUES (phone_number_input, name_input, cpf_input, email_input, company_input, position_input, birth_date_input,day_month_year())
 	RETURNING id INTO idClient;
 
     -- Inserir as categorias relacionadas
@@ -343,9 +343,6 @@ BEGIN
     IF idClient IS NOT NULL THEN
         -- Apagar registros nas tabelas relacionadas com fk para o client_id
         DELETE FROM client_message_cost WHERE client_message_id IN 
-        (SELECT id FROM client_message WHERE client_id = idClient);
-
-        DELETE FROM client_message_unresponded WHERE client_message_id IN 
         (SELECT id FROM client_message WHERE client_id = idClient);
 
         DELETE FROM client_message WHERE client_id = idClient;
