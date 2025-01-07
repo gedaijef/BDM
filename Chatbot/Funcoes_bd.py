@@ -88,7 +88,7 @@ def select_group_message_servicos():
     FROM group_message
     JOIN default_category_group_message ON group_message.id = default_category_group_message.group_message_id
     WHERE default_category_group_message.default_category_id = 8
-    AND has_image IS false
+    AND only_image IS false
     AND content ILIKE '%_Caros amigos, bom dia!_
     _Iniciamos as transmissões do BDM %'
     AND date IS NOT null
@@ -100,7 +100,7 @@ def select_group_message_servicos():
     FROM group_message
     JOIN default_category_group_message ON group_message.id = default_category_group_message.group_message_id
     WHERE default_category_group_message.default_category_id = 8
-    AND has_image IS false
+    AND only_image IS false
     AND content ILIKE '%*Encerramento das transmissões*%'
     ORDER BY date DESC, time DESC
     LIMIT 1)
@@ -109,7 +109,6 @@ def select_group_message_servicos():
     FROM group_message
     JOIN default_category_group_message ON group_message.id = default_category_group_message.group_message_id
     WHERE default_category_group_message.default_category_id = 8
-    AND has_image IS false
     AND date = day_month_year()
     ORDER BY date DESC, time DESC
     )""")
