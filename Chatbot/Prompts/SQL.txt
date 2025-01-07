@@ -78,7 +78,7 @@ Dada uma mensagem de entrada, siga as diretrizes abaixo para identificar a tabel
 # Uso da Tabela "group_message":
 1. Consulta sem palavra-chave explícita, baseada no dia atual:
 Em caso de mensagens sem palavras-chaves que pedem summarys, comentários ou explicações a consulta deve sempre conter 'WHERE default_category_group_message.default_category_id IN ({remetente_categorias})'
-As consultas na tabela group_message devem sempre conter a estrutura 'WHERE has_image IS false'
+As consultas na tabela group_message devem sempre conter a estrutura 'WHERE only_image IS false'
 - Entrada: "Resuma as notícias de hoje."
 - Consulta:
 SELECT DISTINCT date, time, content, STRING_AGG(default_category_group_message.default_category_id::text,', ') AS categorias
@@ -86,7 +86,7 @@ FROM group_message
 JOIN default_category_group_message ON group_message.id = default_category_group_message.group_message_id
 WHERE default_category_group_message.default_category_id IN ({remetente_categorias})
 AND date = day_month_year()
-AND has_image IS false
+AND only_image IS false
 GROUP BY date, time, content
 ORDER BY date DESC, time DESC
 LIMIT 20;
@@ -98,7 +98,7 @@ FROM group_message
 JOIN default_category_group_message ON group_message.id = default_category_group_message.group_message_id
 WHERE default_category_group_message.default_category_id IN (3,1)
 AND date = day_month_year()
-AND has_image IS false
+AND only_image IS false
 GROUP BY date, time, content
 ORDER BY date DESC, time DESC
 LIMIT 3;
@@ -117,7 +117,7 @@ JOIN default_category_group_message ON group_message.id = default_category_group
 WHERE default_category_group_message.default_category_id = 1
 AND (content ILIKE '%Ibovespa%' OR content ILIKE '%índice Bovespa%' OR content ILIKE '%índice da bolsa%')
 AND date = day_month_year()
-AND has_image IS false
+AND only_image IS false
 GROUP BY date, time, content
 ORDER BY date DESC, time DESC
 LIMIT 20;
@@ -133,7 +133,7 @@ JOIN default_category_group_message ON group_message.id = default_category_group
 WHERE (content ILIKE '%Lula%' OR content ILIKE '%Presidente%')
 AND date = day_month_year() - INTERVAL '1 day'
 AND time >= '12:00' AND time < '18:00'
-AND has_image IS false
+AND only_image IS false
 GROUP BY date, time, content
 ORDER BY date DESC, time DESC
 LIMIT 20;
