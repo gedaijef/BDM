@@ -21,7 +21,7 @@ CREATE TABLE Group_Message
     content text unique not null,  
     date date,  
     time time,  
-    has_image boolean, 
+    only_image boolean, 
 	distributed int,
     id serial PRIMARY KEY
 ); 
@@ -207,7 +207,7 @@ RETURNS TABLE(
     content TEXT,
     date DATE,
     "time" TIME,
-    has_image BOOLEAN,
+    only_image BOOLEAN,
     distributed int,
     category TEXT
 ) AS $$
@@ -220,7 +220,7 @@ BEGIN
             gm.content, 
             gm.date, 
             gm.time, 
-            gm.has_image, 
+            gm.only_image, 
             gm.distributed,
             STRING_AGG(dc.name, '','') AS category
         FROM group_message gm
@@ -244,7 +244,7 @@ BEGIN
 
     -- Agrupar e ordenar os resultados
     query := query || '
-        GROUP BY gm.content, gm.date, gm.time, gm.has_image, gm.distributed
+        GROUP BY gm.content, gm.date, gm.time, gm.only_image, gm.distributed
         ORDER BY gm.date, gm.time';
 
     -- Executar a consulta dinâmica com os parâmetros
@@ -389,11 +389,11 @@ EXCEPTION
 END;
 $$;
 ---------------------------------------------
-create or replace view group_message_today as
+create or replace view group_messages_today as
  SELECT gm.date,
     gm."time",
     gm.content,
-    gm.has_image,
+    gm.only_image,
     dc.name
    FROM group_message gm
      JOIN default_category_group_message dcgm ON gm.id = dcgm.group_message_id
