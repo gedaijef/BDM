@@ -43,7 +43,7 @@ for i in range(1, 8):
 
     if len(noticias_filtradas) > 0:
 
-        prompt_resumos = template.format(noticias_filtradas)
+        prompt_resumos = template.format(noticias_filtradas=noticias_filtradas)
 
         # Financeiro e contagem de tokens
         with get_openai_callback() as cb:
