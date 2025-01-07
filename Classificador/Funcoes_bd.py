@@ -10,14 +10,14 @@ load_dotenv()
 def conectar_bd ():
     return psycopg2.connect(os.getenv('URL_BD'))
 
-# Insert na tabela group_message (content (text) e has_image (boolean))
+# Insert na tabela group_message (content (text) e only_image (boolean))
 def insert_group_message (mensagem, imagem):
     execao = False
     conn = conectar_bd()
     cur = conn.cursor()
     cur.execute('SET timezone to "GMT+3";')
     query_sql = """
-    INSERT INTO group_message (content, date, time, has_image)
+    INSERT INTO group_message (content, date, time, only_image)
     VALUES (%s,DAY_MONTH_YEAR(),HOUR_MIN_SEC(),%s);
     """
     try:
@@ -70,24 +70,6 @@ def select_client (categoria):
         lista_selects = []
     conn.close()
     return lista_selects
-
-# Update na tabela group_message_control (distribuidas (int))
-def update_group_message_control (distribuidas):
-    conn = conectar_bd()
-    cur = conn.cursor()
-    cur.execute('SET timezone to "GMT+3";')
-    query_sql = """
-    UPDATE group_message_control 
-    SET distributed = distributed + %s 
-    WHERE date = DAY_MONTH_YEAR();
-    """
-    try:
-        cur.execute(query_sql,(distribuidas,))
-        print('Update na tabela group_message_control realizado com sucesso')
-    except (OperationalError, Error) as e:
-        print(f"Erro ao dar update na tabela group_message_control: {e}")
-    conn.commit()
-    conn.close()
 
 # Update no campo distributed da tabela group_message (distributed (int))
 def update_group_message (quantidade):

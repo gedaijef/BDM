@@ -40,7 +40,7 @@ with open("../Categorias.txt", encoding="utf-8") as arquivo:
 
 # Função para Categorizar as notícias
 def categorizar_noticias(llm, template, categorias, noticia):
-    prompt = template.format(categorias=categorias, noticia=noticia)
+    prompt = template.format(categorias_padrao=categorias, noticia=noticia)
     resposta = llm.invoke(prompt)
     print(f'Categoria(s) da mensagem: {resposta.content}')
     return resposta
@@ -93,7 +93,7 @@ while True:
                         # Pegar somente imagem com legenda
                         else:
                             noticia = message['caption']
-                            eh_mensagem_repetida = insert_group_message(message['caption'],True)
+                            eh_mensagem_repetida = insert_group_message(message['caption'],False)
                             print('Imagem e texto.')
 
                 except Exception as e:
@@ -178,10 +178,12 @@ while True:
                                         url_certa = url_enviar_imagem
                         
                                     # Enviar mensagens para os números
-                                    # response = requests.request("POST", url_certa, data=json.dumps(payload), headers=headers_enviar)
-                                    # print("     enviou para o número: ",response.text.encode('utf8'))
+                                    response = requests.request("POST", url_certa, data=json.dumps(payload), headers=headers_enviar)
+                                    print("     enviou para o número: ",response.text.encode('utf8'))
                             
                                 print(f"\033[31mNúmeros totais: {numeros_totais}\033[0m")
+
+                                update_group_message(numeros_totais)
 
                             except Exception as e:
                                 print(f"Erro ao enviar a notícia: {e}") 
