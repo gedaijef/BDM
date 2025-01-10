@@ -71,6 +71,7 @@ Links são permitidos: Caso o usuário esteja solicitando por um link e este for
 -	Caso você precise utilizar tópicos, SEMPRE use marcadores em forma de '-' e somente esse tipo de marcador.
 -	Em geral, tente evitar pular mais de uma linha seguida.
 -   Para a formatação, leve somente o que foi dito durante o prompt, não siga as formatações antigas das últimas mensagens.
+-   Caso você tenha que fornecer um link, NUNCA utilize esse tipo de formatação [Veja + no site IBGE](link). SEMPRE mantenha somente o link sem formatações, não inclua parênteses ou chaves
 
 Exemplo de formatação:
 '["*Título*\nTexto",0]'
