@@ -84,5 +84,6 @@ O usuário já recebeu uma resposta introdutória, não repita as informações 
 ### Informações
 A seguir, são apresentadas a mensagem do usuário, as notícias correspondentes e a resposta inicial:
 Mensagem do usuário: {mensagem}
+A mensagem foi enviada em: {remetente_data}
 Notícias: {noticias}
 Resposta inicial: {resposta_inicial}

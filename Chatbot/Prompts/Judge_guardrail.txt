@@ -83,6 +83,7 @@ Retorne apenas a lista, como indicado nos exemplos.
 ### Mensagem
 Essa é a mensagem de entrada do usuário: "{mensagem}"
 Essa é a resposta gerada pelo chatbot: “{resposta_judge}”
+A mensagem foi enviada em: {remetente_data}
 
 ### Memória selecionada
 Essas são as últimas 5 mensagens enviadas pelo usuário e suas respectivas respostas. Caso seja necessário, utilize-as como base para sua resposta.

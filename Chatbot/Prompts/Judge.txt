@@ -309,7 +309,7 @@ Para deixar um texto em negrito, nunca adicione asteriscos duplos, apenas *mensa
 ### Mensagem
 Essa é a mensagem de entrada do usuário: "{mensagem}"
 Categorias do usuário: {categorias}
-Horário de envio da mensagem: {horario}
+A mensagem foi enviada em: {remetente_data}
 
 ### Memória selecionada
 Essas são as últimas 5 mensagens enviadas pelo usuário e suas respectivas respostas. Caso seja necessário, utilize-as como base para sua resposta.
