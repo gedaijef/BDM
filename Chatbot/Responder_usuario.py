@@ -214,8 +214,6 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
             # Executar o Prompt do Juiz sem memória
             prompt_juiz = template_juiz_s_memoria.format(mensagem=remetente_mensagem, categorias=[item for item in remetente_categorias if item != 8], remetente_data=remetente_data)
 
-            print("A", prompt_juiz)
-
         # Obter as informações do Prompt do Juiz
         with get_openai_callback() as dados:
             resposta_juiz = llm.invoke(prompt_juiz)
@@ -244,8 +242,6 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
             resposta_juiz_guardrail = model.generate_content(prompt_juiz_guardrail)
             print(resposta_juiz_guardrail.text)
             resposta_juiz_guardrail = ast.literal_eval(resposta_juiz_guardrail.text)
-
-            print("A", prompt_juiz_guardrail)
 
         # Alterar as respostas caso seja identificado um erro
         if resposta_juiz_guardrail[0] ==1:
@@ -310,8 +306,6 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                 else:
                     prompt_sql = template_sql.format(message=resposta_juiz[2], remetente_categorias=remetente_categorias, remetente_data=remetente_data)
 
-                print("A", prompt_sql)
-
                 # Obter as informações do Prompt do Consultor SQL
                 with get_openai_callback() as dados:
                     resposta_sql = llm.invoke(prompt_sql)    
@@ -358,8 +352,6 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                     else:
                         prompt_escritor = template_responder_s_memoria.format(mensagem=remetente_mensagem, noticias=noticias_formatadas, resposta_inicial=resposta_juiz[0], remetente_data=remetente_data)
 
-                    print("A", prompt_escritor)
-
                     # Obter as informações do Prompt Escritor de Resposta
                     with get_openai_callback() as dados:
                         resposta_escritor = llm.invoke(prompt_escritor)
@@ -395,8 +387,6 @@ def responder_cliente (message, remetente_categorias, remetente_numero, template
                         resposta_escritor_guardrail = model.generate_content(prompt_escritor_guardrail)
                         print(resposta_escritor_guardrail.text)
                         resposta_escritor_guardrail = ast.literal_eval(resposta_escritor_guardrail.text)
-
-                    print("A", prompt_escritor_guardrail)
 
                     # Alterar as respostas caso seja identificado um erro
                     if resposta_escritor_guardrail[0] ==1:
